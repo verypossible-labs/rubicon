@@ -1,4 +1,4 @@
-defmodule RubiconHost do
+defmodule Rubicon do
   use Scenic.Scene
   require Logger
 

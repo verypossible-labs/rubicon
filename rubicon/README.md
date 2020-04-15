@@ -1,4 +1,4 @@
-# RubiconHost
+# Rubicon
 
 **TODO: Add description**
 

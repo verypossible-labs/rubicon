@@ -1,16 +1,17 @@
-defmodule RubiconTarget.MixProject do
+defmodule Rubicon.MixProject do
   use Mix.Project
 
-  @app :rubicon_target
+  @app :rubicon
   @version "0.1.0"
-  @all_targets [:rpi, :rpi0, :rpi2, :rpi3, :rpi3a, :rpi4, :bbb, :x86_64]
+  @all_targets [:rpi3, :rpi4]
 
   def project do
     [
       app: @app,
+      name: "rebucon",
       version: @version,
       elixir: "~> 1.9",
-      archives: [nerves_bootstrap: "~> 1.8"],
+      archives: [nerves_bootstrap: "~> 1.7"],
       start_permanent: Mix.env() == :prod,
       build_embedded: true,
       aliases: [loadconfig: [&bootstrap/1]],
@@ -30,8 +31,8 @@ defmodule RubiconTarget.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      mod: {RubiconTarget.Application, []},
-      extra_applications: [:logger, :runtime_tools, :inets]
+      mod: {Rubicon.Application, []},
+      extra_applications: [:logger, :runtime_tools]
     ]
   end
 
@@ -43,23 +44,22 @@ defmodule RubiconTarget.MixProject do
       {:shoehorn, "~> 0.6"},
       {:ring_logger, "~> 0.6"},
       {:toolshed, "~> 0.2"},
+      {:scenic, "~> 0.10"},
+      {:nerves_hub_cli, "~> 0.1"},
       {:rubicon_api, path: "../rubicon_api"},
-      {:circuits_gpio, "~> 0.1", targets: @all_targets},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
-      {:nerves_pack, "~> 0.2", targets: @all_targets},
+      {:nerves_hub_link, "~> 0.1", targets: @all_targets},
       {:nerves_key, "~> 0.1", targets: @all_targets},
+      {:nerves_pack, "~> 0.2", targets: @all_targets},
+      {:scenic_driver_nerves_rpi, "~> 0.10", targets: @all_targets},
+      {:scenic_driver_nerves_touch, "~> 0.9", targets: @all_targets},
 
       # Dependencies for specific targets
-      {:nerves_system_rpi, "~> 1.11", runtime: false, targets: :rpi},
-      {:nerves_system_rpi0, "~> 1.11", runtime: false, targets: :rpi0},
-      {:nerves_system_rpi2, "~> 1.11", runtime: false, targets: :rpi2},
       {:nerves_system_rpi3, "~> 1.11", runtime: false, targets: :rpi3},
-      {:nerves_system_rpi3a, "~> 1.11", runtime: false, targets: :rpi3a},
       {:nerves_system_rpi4, "~> 1.11", runtime: false, targets: :rpi4},
-      {:nerves_system_bbb, "~> 2.6", runtime: false, targets: :bbb},
-      {:nerves_system_x86_64, "~> 1.11", runtime: false, targets: :x86_64},
+      {:scenic_driver_glfw, "~> 0.10", targets: :host},
     ]
   end
 
@@ -68,7 +68,7 @@ defmodule RubiconTarget.MixProject do
       overwrite: true,
       cookie: "rubicon",
       include_erts: &Nerves.Release.erts/0,
-      steps: [&Nerves.Release.init/1, :assemble, &ExUnitRelease.include/1],
+      steps: [&Nerves.Release.init/1, :assemble],
       strip_beams: Mix.env() == :prod
     ]
   end

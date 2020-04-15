@@ -5,7 +5,7 @@
 # is restricted to this project.
 import Config
 
-config :rubicon_host, target: Mix.target()
+config :rubicon, target: Mix.target()
 
 # Customize non-Elixir parts of the firmware. See
 # https://hexdocs.pm/nerves/advanced-configuration.html for details.
@@ -21,10 +21,10 @@ config :nerves, source_date_epoch: "1584672570"
 # See https://hexdocs.pm/ring_logger/readme.html for more information on
 # configuring ring_logger.
 
-config :rubicon_host, :viewport, %{
+config :rubicon, :viewport, %{
   name: :main_viewport,
   size: {800, 480},
-  default_scene: {RubiconHost, nil},
+  default_scene: {Rubicon, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,

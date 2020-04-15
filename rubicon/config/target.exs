@@ -17,6 +17,9 @@ config :nerves_runtime, :kernel, use_system_registry: false
 config :nerves, :erlinit,
   ctty: "ttyAMA0"
 
+config :nerves_hub,
+  org: "very"
+
 # Authorize the device to receive firmware using your public key.
 # See https://hexdocs.pm/nerves_firmware_ssh/readme.html for more information
 # on configuring nerves_firmware_ssh.
@@ -69,7 +72,7 @@ config :mdns_lite,
   # "nerves.local" for convenience. If more than one Nerves device is on the
   # network, delete "nerves" from the list.
 
-  host: [:hostname, "rubicon-host"],
+  host: [:hostname, "rubicon"],
 
   ttl: 120,
 
@@ -95,9 +98,9 @@ config :mdns_lite,
     }
   ]
 
-config :rubicon_host, :viewport, %{
+config :rubicon, :viewport, %{
   size: {800, 480},
-  default_scene: {RubiconHost, nil},
+  default_scene: {Rubicon, nil},
   drivers: [
     %{
       module: Scenic.Driver.Nerves.Rpi

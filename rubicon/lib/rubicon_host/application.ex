@@ -1,4 +1,4 @@
-defmodule RubiconHost.Application do
+defmodule Rubicon.Application do
   # See https://hexdocs.pm/elixir/Application.html
   # for more information on OTP Applications
   @moduledoc false
@@ -9,14 +9,14 @@ defmodule RubiconHost.Application do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     System.cmd("epmd", ["-daemon"])
-    opts = [strategy: :one_for_one, name: RubiconHost.Supervisor]
+    opts = [strategy: :one_for_one, name: Rubicon.Supervisor]
 
-    main_viewport_config = Application.get_env(:rubicon_host, :viewport)
+    main_viewport_config = Application.get_env(:rubicon, :viewport)
 
     children =
       [
         # Children for all targets
-        # Starts a worker by calling: RubiconHost.Worker.start_link(arg)
+        # Starts a worker by calling: Rubicon.Worker.start_link(arg)
         {Scenic, viewports: [main_viewport_config]}
       ] ++ children(target())
 
@@ -27,20 +27,20 @@ defmodule RubiconHost.Application do
   def children(:host) do
     [
       # Children that only run on the host
-      # Starts a worker by calling: RubiconHost.Worker.start_link(arg)
-      # {RubiconHost.Worker, arg},
+      # Starts a worker by calling: Rubicon.Worker.start_link(arg)
+      # {Rubicon.Worker, arg},
     ]
   end
 
   def children(_target) do
     [
       # Children for all targets except host
-      # Starts a worker by calling: RubiconHost.Worker.start_link(arg)
-      # {RubiconHost.Worker, arg},
+      # Starts a worker by calling: Rubicon.Worker.start_link(arg)
+      # {Rubicon.Worker, arg},
     ]
   end
 
   def target() do
-    Application.get_env(:rubicon_host, :target)
+    Application.get_env(:rubicon, :target)
   end
 end
