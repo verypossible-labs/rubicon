@@ -12,7 +12,7 @@ config :shoehorn,
 # SystemRegistry. This slows down startup and not many programs make use of
 # this feature.
 
-config :nerves_runtime, :kernel, use_system_registry: false
+config :nerves_runtime, :kernel, use_system_registry: true
 
 config :nerves, :erlinit,
   ctty: "ttyAMA0"

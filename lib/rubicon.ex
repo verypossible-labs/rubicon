@@ -43,7 +43,7 @@ defmodule Rubicon do
       |> :inet.ntoa()
       |> List.to_string()
 
-    Node.start(:"rubicon-host@#{host_address}")
+    Node.start(:"rubicon@#{host_address}")
 
     {:ok, graph, push: graph}
   end

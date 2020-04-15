@@ -36,8 +36,8 @@ defmodule RubiconTarget do
         [%{address: my_address} | _] ->
           host_address = my_address |> subtract_one() |> ip_to_string()
           my_address = ip_to_string(my_address)
-          my_node = :"rubicon-target@#{my_address}"
-          host_node = :"rubicon-host@#{host_address}"
+          my_node = :"target@#{my_address}"
+          host_node = :"rubicon@#{host_address}"
           {:ok, _pid} = Node.start(my_node)
           Logger.debug "Node started #{inspect my_node}"
           %{s | host_node: host_node, status: :connected}
