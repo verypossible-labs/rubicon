@@ -48,6 +48,7 @@ defmodule Rubicon.Barcode do
     case @framing.decode(data) do
       {:ok, barcode} ->
         Logger.debug "[Barcode] #{inspect barcode}"
+        Rubicon.TestServer.barcode_scanned(barcode)
       {:error, reason} ->
         Logger.warn "[Barcode] Framing error: #{inspect reason}"
     end

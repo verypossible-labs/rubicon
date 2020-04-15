@@ -28,7 +28,7 @@ defmodule Rubicon.Barcode.SymbolFraming do
   end
 
   defp do_decode(:string, barcode) do
-    {:ok, {:string, barcode}}
+    {:ok, barcode}
   end
 
   defp determine_barcode_type(len, data) do

@@ -6,13 +6,13 @@
 # Usage:
 #   upload.sh [destination IP] [Path to .fw file]
 #
-# If unspecifed, the destination is nerves.local and the .fw file is naively
+# If unspecifed, the destination is rubicon.local and the .fw file is naively
 # guessed
 #
 # You may want to add the following to your `~/.ssh/config` to avoid recording
 # the IP addresses of the target:
 #
-# Host nerves.local
+# Host rubicon.local
 #   UserKnownHostsFile /dev/null
 #   StrictHostKeyChecking no
 #
@@ -40,7 +40,7 @@ help() {
     echo
     echo "upload.sh [destination IP] [Path to .fw file]"
     echo
-    echo "Default destination IP is 'nerves.local'"
+    echo "Default destination IP is 'rubicon.local'"
     echo "Default firmware bundle is the first .fw file in '_build/\${MIX_TARGET}_\${MIX_ENV}/nerves/images'"
     echo
     echo "MIX_TARGET=$MIX_TARGET"
@@ -48,7 +48,7 @@ help() {
     exit 1
 }
 
-[ -n "$DESTINATION" ] || DESTINATION=nerves.local
+[ -n "$DESTINATION" ] || DESTINATION=rubicon.local
 [ -n "$MIX_TARGET" ] || MIX_TARGET=rpi0
 [ -n "$MIX_ENV" ] || MIX_ENV=dev
 if [ -z "$FILENAME" ]; then
