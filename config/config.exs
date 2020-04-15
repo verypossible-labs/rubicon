@@ -24,7 +24,7 @@ config :nerves, source_date_epoch: "1584672570"
 config :rubicon, :viewport, %{
   name: :main_viewport,
   size: {800, 480},
-  default_scene: {Rubicon, nil},
+  default_scene: {Rubicon.UI, nil},
   drivers: [
     %{
       module: Scenic.Driver.Glfw,

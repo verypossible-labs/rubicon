@@ -1,8 +1,8 @@
-defmodule RubiconApiTest do
+defmodule RubiconAPITest do
   use ExUnit.Case
-  doctest RubiconApi
+  doctest RubiconAPI
 
   test "greets the world" do
-    assert RubiconApi.hello() == :world
+    assert RubiconAPI.hello() == :world
   end
 end

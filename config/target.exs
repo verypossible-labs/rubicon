@@ -73,8 +73,8 @@ config :mdns_lite,
   # network, delete "nerves" from the list.
 
   host: [:hostname, "rubicon"],
-
   ttl: 120,
+  excluded_ifnames: ["eth0"],
 
   # Advertise the following services over mDNS.
   services: [
@@ -100,7 +100,7 @@ config :mdns_lite,
 
 config :rubicon, :viewport, %{
   size: {800, 480},
-  default_scene: {Rubicon, nil},
+  default_scene: {Rubicon.UI, nil},
   drivers: [
     %{
       module: Scenic.Driver.Nerves.Rpi

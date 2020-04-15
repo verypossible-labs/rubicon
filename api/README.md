@@ -1,4 +1,4 @@
-# RubiconApi
+# RubiconAPI
 
 **TODO: Add description**
 

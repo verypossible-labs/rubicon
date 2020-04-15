@@ -1,4 +1,4 @@
-defmodule RubiconApi.MixProject do
+defmodule RubiconAPI.MixProject do
   use Mix.Project
 
   def project do

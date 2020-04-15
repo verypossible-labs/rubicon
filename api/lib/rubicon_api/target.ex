@@ -1,4 +1,4 @@
-defmodule RubiconTarget do
+defmodule RubiconAPI.Target do
   use GenServer
 
   require Logger
@@ -7,29 +7,32 @@ defmodule RubiconTarget do
     GenServer.start_link(__MODULE__, opts, name: __MODULE__)
   end
 
-  def init(_opts) do
-    VintageNet.subscribe(["interface", "eth0"])
+  def init(opts) do
+    System.cmd("epmd", ["-daemon"])
+    ifname = opts[:network_interface]
+    VintageNet.subscribe(["interface", ifname])
 
     {:ok, %{
       status: :disconnected,
       timer_ref: nil,
       host_address: nil,
-      host_node: nil
+      host_node: nil,
+      ifname: ifname
     }}
   end
 
-  def handle_info({VintageNet, ["interface", "eth0", "lower_up"], false, true, %{}}, s) do
+  def handle_info({VintageNet, ["interface", ifname, "lower_up"], false, true, %{}}, %{ifname: ifname} = s) do
     {:ok, timer_ref} = :timer.send_interval(1000, :connect)
     {:noreply, %{s | timer_ref: timer_ref}}
   end
 
-  def handle_info({VintageNet, ["interface", "eth0", "lower_up"], true, false, %{}}, s) do
+  def handle_info({VintageNet, ["interface", ifname, "lower_up"], true, false, %{}}, %{ifname: ifname} = s) do
     {:noreply, disconnect(s)}
   end
 
-  def handle_info(:connect, %{status: :disconnected} = s) do
+  def handle_info(:connect, %{status: :disconnected, ifname: ifname} = s) do
     s =
-      case VintageNet.get(["interface", "eth0", "addresses"]) do
+      case VintageNet.get(["interface", ifname, "addresses"]) do
         nil ->
           s
 
@@ -51,8 +54,8 @@ defmodule RubiconTarget do
       if Node.connect(host_node) do
           :timer.cancel(s.timer_ref)
           :timer.sleep(100)
-          RubiconAPI.set_status(host_node, "Connected. Running tests...")
-          run_tests(host_node)
+          RubiconAPI.handshake(host_node)
+          # run_tests(host_node)
           %{s | host_node: host_node}
       else
         s
@@ -77,7 +80,7 @@ defmodule RubiconTarget do
 
   defp run_tests(host_node) do
     {:ok, results} = ExUnitRelease.run()
-    RubiconAPI.test_results(host_node, results)
+    RubiconAPI.exunit_results(host_node, results)
   end
 
   defp ip_to_string(ip) do
