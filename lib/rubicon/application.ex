@@ -8,7 +8,6 @@ defmodule Rubicon.Application do
   def start(_type, _args) do
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
-    System.cmd("epmd", ["-daemon"])
     opts = [strategy: :one_for_one, name: Rubicon.Supervisor]
 
     main_viewport_config = Application.get_env(:rubicon, :viewport)

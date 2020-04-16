@@ -45,6 +45,7 @@ defmodule Rubicon.MixProject do
       {:toolshed, "~> 0.2"},
       {:scenic, "~> 0.10"},
       {:nerves_hub_cli, "~> 0.1"},
+      {:nerves_hal, "~> 0.1"},
       {:rubicon_api, path: "api"},
 
       # Dependencies for all targets except :host
@@ -54,7 +55,6 @@ defmodule Rubicon.MixProject do
       {:nerves_pack, "~> 0.2", targets: @all_targets},
       {:scenic_driver_nerves_rpi, "~> 0.10", targets: @all_targets},
       {:scenic_driver_nerves_touch, "~> 0.9", targets: @all_targets},
-      {:nerves_hal, "~> 0.1", targets: @all_targets},
       {:hidraw, "~> 0.1", targets: @all_targets},
 
       # Dependencies for specific targets
