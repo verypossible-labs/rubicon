@@ -46,7 +46,6 @@ defmodule Rubicon.MixProject do
       {:scenic, "~> 0.10"},
       {:nerves_hub_cli, "~> 0.1"},
       {:nerves_hal, "~> 0.1"},
-      {:rubicon_api, path: "api"},
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
