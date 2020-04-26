@@ -7,16 +7,17 @@ defmodule Rubicon.MixProject do
 
   def project do
     [
-      app: @app,
-      version: @version,
-      elixir: "~> 1.9",
-      archives: [nerves_bootstrap: "~> 1.7"],
-      start_permanent: Mix.env() == :prod,
-      build_embedded: true,
       aliases: [loadconfig: [&bootstrap/1]],
+      app: @app,
+      archives: [nerves_bootstrap: "~> 1.7"],
+      build_embedded: true,
       deps: deps(),
+      docs: [main: "Rubicon", extras: ["docs/local-development.md"]],
+      elixir: "~> 1.9",
+      preferred_cli_target: [run: :host, test: :host],
       releases: [{@app, release()}],
-      preferred_cli_target: [run: :host, test: :host]
+      start_permanent: Mix.env() == :prod,
+      version: @version
     ]
   end
 
