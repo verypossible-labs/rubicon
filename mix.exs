@@ -57,8 +57,8 @@ defmodule Rubicon.MixProject do
       {:hidraw, "~> 0.1", targets: @all_targets},
 
       # Dependencies for specific targets
-      {:nerves_system_rpi3, "~> 1.11", runtime: false, targets: :rpi3},
-      {:scenic_driver_glfw, "~> 0.10", targets: :host},
+      {:nerves_system_rpi3, "== 1.11.0", runtime: false, targets: :rpi3},
+      {:scenic_driver_glfw, "~> 0.10", targets: :host}
     ]
   end
 

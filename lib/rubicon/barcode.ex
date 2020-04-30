@@ -22,36 +22,41 @@ defmodule Rubicon.Barcode do
 
   def handle_discover(device, s) do
     {adapter, _opts} = __adapter__()
+
     case adapter.attributes(device) do
       @stationary ->
-        Logger.debug "[Barcode] Discovered"
+        Logger.debug("[Barcode] Discovered")
         {:connect, device, s}
+
       @handheld ->
-        Logger.debug "[Barcode] Discovered"
+        Logger.debug("[Barcode] Discovered")
         {:connect, device, s}
+
       _ ->
         {:noreply, s}
     end
   end
 
   def handle_connect(_device, s) do
-    Logger.debug "[Barcode] Connected"
+    Logger.debug("[Barcode] Connected")
     {:noreply, %{s | status: :connected}}
   end
 
   def handle_disconnect(_device, s) do
-    Logger.debug "[Barcode] Disconnected"
+    Logger.debug("[Barcode] Disconnected")
     {:noreply, %{s | status: :disconnected}}
   end
 
   def handle_data_in(_device, data, s) when is_binary(data) do
     case @framing.decode(data) do
       {:ok, barcode} ->
-        Logger.debug "[Barcode] #{inspect barcode}"
+        Logger.debug("[Barcode] #{inspect(barcode)}")
         Rubicon.barcode_scanned(barcode)
+
       {:error, reason} ->
-        Logger.warn "[Barcode] Framing error: #{inspect reason}"
+        Logger.warn("[Barcode] Framing error: #{inspect(reason)}")
     end
+
     {:noreply, s}
   end
 
@@ -60,8 +65,7 @@ defmodule Rubicon.Barcode do
   end
 
   def handle_data_in(_device, data, s) do
-    Logger.debug "[Barcode] Handled invalid data in: #{inspect data}"
+    Logger.debug("[Barcode] Handled invalid data in: #{inspect(data)}")
     {:noreply, s}
   end
-
 end

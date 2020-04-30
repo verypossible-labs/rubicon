@@ -5,7 +5,7 @@ import Config
 # involved with firmware updates.
 
 config :shoehorn,
-  init: [:nerves_runtime, :nerves_pack, :nerves_hal],
+  init: [:nerves_runtime, :nerves_pack, :vintage_net, :nerves_hal],
   app: Mix.Project.config()[:app]
 
 # Nerves Runtime can enumerate hardware devices and send notifications via
@@ -14,11 +14,14 @@ config :shoehorn,
 
 config :nerves_runtime, :kernel, use_system_registry: true
 
-config :nerves, :erlinit,
-  ctty: "ttyAMA0"
+config :nerves, :erlinit, ctty: "ttyAMA0"
 
 config :nerves_hub,
-  org: "very"
+  org: System.get_env("NERVES_HUB_ORG")
+
+config :nerves_hub_link,
+  remote_iex: true,
+  fwup_public_keys: [System.get_env("FWUP_PUBLIC_KEYS")]
 
 # Authorize the device to receive firmware using your public key.
 # See https://hexdocs.pm/nerves_firmware_ssh/readme.html for more information
@@ -48,21 +51,21 @@ config :nerves_firmware_ssh,
 config :vintage_net,
   regulatory_domain: "US",
   config: [
-    {"eth0",
-     %{type: VintageNetDirect}},
-    {"wlan0", %{
-      type: VintageNetWiFi,
-      ipv4: %{method: :dhcp},
-      vintage_net_wifi: %{
-        networks: [
-          %{
-            key_mgmt: :wpa_psk,
-            ssid: System.get_env("NERVES_WIFI_SSID"),
-            psk: System.get_env("NERVES_WIFI_PSK"),
-          }
-        ]
-      },
-    }}
+    {"eth0", %{type: VintageNetDirect}},
+    {"wlan0",
+     %{
+       type: VintageNetWiFi,
+       ipv4: %{method: :dhcp},
+       vintage_net_wifi: %{
+         networks: [
+           %{
+             key_mgmt: :wpa_psk,
+             ssid: System.get_env("NERVES_WIFI_SSID"),
+             psk: System.get_env("NERVES_WIFI_PSK")
+           }
+         ]
+       }
+     }}
   ]
 
 config :mdns_lite,
@@ -108,9 +111,8 @@ config :rubicon, :viewport, %{
     %{
       module: Scenic.Driver.Nerves.Touch,
       opts: [
-        device: "FT5406 memory based driver",
-        calibration: {{1,0,0},{0,1,0}}
-      ],
+        device: "FT5406 memory based driver"
+      ]
     }
   ]
 }

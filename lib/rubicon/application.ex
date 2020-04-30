@@ -16,7 +16,7 @@ defmodule Rubicon.Application do
       [
         # Children for all targets
         # Starts a worker by calling: Rubicon.Worker.start_link(arg)
-        {Scenic, viewports: [main_viewport_config]},
+        {Scenic, viewports: [main_viewport_config]}
       ] ++ children(target())
 
     Supervisor.start_link(children, opts)
@@ -37,7 +37,8 @@ defmodule Rubicon.Application do
       # Starts a worker by calling: Rubicon.Worker.start_link(arg)
       # {Rubicon.Worker, arg},
       {Rubicon, [network_interface: "eth0"]},
-      Rubicon.Barcode
+      Rubicon.Barcode,
+      Rubicon.USBDisk
     ]
   end
 
