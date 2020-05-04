@@ -31,7 +31,7 @@ The prerequisites section will want you to install Elixir and Erlang, this is on
 
 ## Testing
 
-`MIX_TARGET=host mix test`.
+`mix test`.
 
 ## Building Firmware
 
