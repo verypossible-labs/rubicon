@@ -89,11 +89,23 @@ defmodule Rubicon do
     Logger.debug("Tests finished: #{inspect(status)}")
     Logger.debug("Results: #{inspect(results)}")
 
+    step_results = Enum.reduce(results, [], fn
+      ({step, :ok}, acc) -> [%{step: step, status: :ok, output: ""} | acc]
+      ({step, {status, output}}, acc) -> [%{step: step, status: status, output: output} | acc]
+    end)
     data =
-      Enum.map(results, &(elem(&1, 0) <> "," <> inspect(elem(&1, 1))))
-      |> Enum.join("\n")
+      %{
+        status: status,
+        target_id: s.target_id,
+        step_results: step_results
+      }
+    data =
+      case Jason.encode(data) do
+        {:ok, data} -> data
+        _ -> inspect(data)
+      end
 
-    USBDisk.write("targets/#{s.target_id}", data)
+    USBDisk.write("target_output/#{s.target_id}.json", data)
 
     UI.render_result(status)
     {:reply, :ok, s}
@@ -218,5 +230,17 @@ defmodule Rubicon do
   defp start_node(address, s) do
     {:ok, pid} = Node.start(:"rubicon@#{address}")
     %{s | node: pid}
+  end
+
+  defimpl Jason.Encoder, for: [MapSet, Range, Stream] do
+    def encode(struct, opts) do
+      Jason.Encode.list(Enum.to_list(struct), opts)
+    end
+  end
+
+  defimpl Jason.Encoder, for: [Tuple] do
+    def encode(tuple, opts) do
+      Jason.Encode.list(Tuple.to_list(tuple), opts)
+    end
   end
 end
