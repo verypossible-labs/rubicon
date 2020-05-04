@@ -23,12 +23,12 @@ defmodule Rubicon.USBDisk do
   end
 
   def write(file, data) do
-    file
+    Path.join(@mount, file)
     |> Path.dirname()
     |> File.mkdir_p()
 
     if mounted?() do
-      File.write("#{@mount}/#{file}", data)
+      File.write("#{@mount}/#{file}", data, [:write, :sync])
     else
       {:error, :no_disk}
     end
