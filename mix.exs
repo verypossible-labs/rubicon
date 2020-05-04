@@ -51,8 +51,6 @@ defmodule Rubicon.MixProject do
 
       # Dependencies for all targets except :host
       {:nerves_runtime, "~> 0.6", targets: @all_targets},
-      {:nerves_hub_link, "~> 0.1", targets: @all_targets},
-      {:nerves_key, "~> 0.1", targets: @all_targets},
       {:nerves_pack, "~> 0.2", targets: @all_targets},
       {:scenic_driver_nerves_rpi, "~> 0.10", targets: @all_targets},
       {:scenic_driver_nerves_touch, "~> 0.9", targets: @all_targets},
@@ -61,6 +59,14 @@ defmodule Rubicon.MixProject do
       # Dependencies for specific targets
       {:nerves_system_rpi3, "== 1.11.0", runtime: false, targets: :rpi3},
       {:scenic_driver_glfw, "~> 0.10", targets: :host}
+    ] ++ nerves_hub(System.get_env("NERVES_HUB_ENABLE"))
+  end
+
+  def nerves_hub(nil), do: []
+  def nerves_hub(_) do
+    [
+      {:nerves_hub_link, "~> 0.1", targets: @all_targets},
+      {:nerves_key, "~> 0.1", targets: @all_targets}
     ]
   end
 
