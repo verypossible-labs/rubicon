@@ -19,9 +19,13 @@ config :nerves, :erlinit, ctty: "ttyAMA0"
 config :nerves_hub,
   org: System.get_env("NERVES_HUB_ORG")
 
+public_keys = System.get_env("FWUP_PUBLIC_KEYS", "")
+  |> String.split(",")
+  |> Enum.map(&String.trim/1)
+
 config :nerves_hub_link,
   remote_iex: true,
-  fwup_public_keys: [System.get_env("FWUP_PUBLIC_KEYS")]
+  fwup_public_keys: public_keys
 
 # Authorize the device to receive firmware using your public key.
 # See https://hexdocs.pm/nerves_firmware_ssh/readme.html for more information
