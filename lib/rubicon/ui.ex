@@ -38,6 +38,14 @@ defmodule Rubicon.UI do
     GenServer.call({:global, __MODULE__}, {:prompt_yn?, message}, timeout)
   end
 
+  def prompt(message) do
+    GenServer.call({:global, __MODULE__}, {:prompt, message})
+  end
+
+  def prompt_clear() do
+    GenServer.call({:global, __MODULE__}, :prompt_clear)
+  end
+
   def reset() do
     GenServer.call({:global, __MODULE__}, :reset)
   end
@@ -152,6 +160,7 @@ defmodule Rubicon.UI do
     color =
       case result do
         :ok -> :green
+        {:ok, _} -> :green
         _ -> :red
       end
 
@@ -229,6 +238,16 @@ defmodule Rubicon.UI do
     {:noreply, %{s | prompt: from, graph: graph}, push: graph}
   end
 
+  def handle_call({:prompt, message}, _from, %{graph: graph} = s) do
+    graph = Graph.modify(graph, :prompt, &text(&1, message))
+    {:reply, :ok, %{s | graph: graph}, push: graph}
+  end
+
+  def handle_call(:prompt_clear, _from, s) do
+    graph = clear_prompt(s)
+    {:reply, :ok, %{s | graph: graph}, push: graph}
+  end
+
   def handle_input(input, _ctx, state) do
     Logger.debug("Input: #{inspect(input)}")
     {:noreply, state}
@@ -239,16 +258,11 @@ defmodule Rubicon.UI do
     {:cont, event, s, push: s.graph}
   end
 
-  def filter_event({:click, button} = event, _from, %{graph: graph, prompt: prompt} = s) do
+  def filter_event({:click, button} = event, _from, %{prompt: prompt} = s) do
     Logger.debug("Clicked #{inspect(button)}")
     GenServer.reply(prompt, button)
 
-    graph =
-      graph
-      |> Graph.delete(:prompt_group)
-      |> add_specs_to_graph([
-        prompt_group_spec(s)
-      ])
+    graph = clear_prompt(s)
 
     {:cont, event, %{s | prompt: nil, graph: graph}, push: graph}
   end
@@ -274,5 +288,13 @@ defmodule Rubicon.UI do
       ],
       id: :prompt_group
     )
+  end
+
+  defp clear_prompt(s) do
+    s.graph
+    |> Graph.delete(:prompt_group)
+    |> add_specs_to_graph([
+      prompt_group_spec(s)
+    ])
   end
 end
