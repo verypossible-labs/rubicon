@@ -34,6 +34,26 @@ config :rubicon, :viewport, %{
   ]
 }
 
+config :rubicon, :barcode, %{
+  devices: [
+    %{
+      module: Rubicon.Barcode.HIDRawDevice,
+      framing: Rubicon.Barcode.Framing.SymbolFraming,
+      filters: [
+        %{name: "ﾩSymbol Technologies, Inc, 2002 Symbol Bar Code Scanner"},
+        %{name: "Symbol Technologies, Inc, 2008 Symbol Bar Code Scanner"}
+      ]
+    },
+    %{
+      module: Rubicon.Barcode.HIDRawDevice,
+      framing: Rubicon.Barcode.Framing.HIDKeyboardNewLineFraming,
+      filters: [
+        %{name: "BarCode WPM USB"}
+      ]
+    }
+  ]
+}
+
 config :logger, backends: [RingLogger]
 
 if Mix.target() != :host do
