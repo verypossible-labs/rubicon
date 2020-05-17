@@ -37,7 +37,7 @@ defmodule Rubicon.Application do
       # Starts a worker by calling: Rubicon.Worker.start_link(arg)
       # {Rubicon.Worker, arg},
       {Rubicon, [network_interface: "eth0"]},
-      Rubicon.Barcode,
+      {Rubicon.Barcode, Application.get_env(:rubicon, :barcode)},
       Rubicon.USBDisk
     ]
   end
